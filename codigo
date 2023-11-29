@@ -1,0 +1,118 @@
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    // Definir la estructura del nodo
+    private class Nodo {
+        int dato;
+        Nodo siguiente;
+
+        Nodo(int valor) {
+            this.dato = valor;
+            this.siguiente = null;
+        }
+    }
+
+    // Inicializar los componentes de la interfaz
+    private EditText inputEditText;
+    private TextView outputTextView;
+    private Button addButton;
+
+    // Inicializar la lista
+    private Nodo inicio = null;
+    private Nodo ultimo = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Enlazar los componentes de la interfaz con las variables
+        inputEditText = findViewById(R.id.inputEditText);
+        outputTextView = findViewById(R.id.outputTextView);
+        addButton = findViewById(R.id.addButton);
+
+        // Configurar el clic del botón "Agregar"
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Extraer el número ingresado en el EditText
+                int valor = Integer.parseInt(inputEditText.getText().toString());
+
+                // Crear un nuevo nodo con el número
+                Nodo nuevoNodo = new Nodo(valor);
+
+                // Agregar el nodo a la lista
+                if (inicio == null) {
+                    inicio = nuevoNodo;
+                    ultimo = nuevoNodo;
+                } else {
+                    ultimo.siguiente = nuevoNodo;
+                    ultimo = nuevoNodo;
+                }
+
+                // Limpiar el EditText después de agregar el número
+                inputEditText.setText("");
+
+                // Actualizar el TextView para mostrar la lista actualizada
+                actualizarSalida();
+            }
+        });
+    }
+
+    // Método para actualizar el TextView con la lista actualizada
+    private void actualizarSalida() {
+        StringBuilder resultado = new StringBuilder();
+        Nodo actual = inicio;
+
+        // Recorrer la lista y construir el resultado
+        while (actual != null) {
+            resultado.append(actual.dato).append("\n");
+            actual = actual.siguiente;
+        }
+
+        // Mostrar la lista en el TextView
+        outputTextView.setText(resultado.toString());
+    }
+}
+
+------------------------------------------------------------------
+xml codigo 
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- EditText para ingresar datos numéricos -->
+    <EditText
+        android:id="@+id/inputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese un número"  <!-- Texto de sugerencia en el EditText -->
+    android:inputType="number"/>      <!-- Tipo de entrada: número -->
+
+    <!-- Button para agregar el número a la lista -->
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputEditText"  <!-- Posicionado debajo del EditText -->
+    android:text="Agregar"/>                  <!-- Texto del botón -->
+
+    <!-- TextView para mostrar la lista actualizada -->
+    <TextView
+        android:id="@+id/outputTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addButton"  <!-- Posicionado debajo del botón -->
+    android:text="Lista: "                 <!-- Texto inicial del TextView -->
+
+</RelativeLayout>
